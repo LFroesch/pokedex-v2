@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.PROD ? '/api' : 'http://localhost:8080/api';
+const API_BASE = import.meta.env.MODE === 'production' ? '/api' : 'http://localhost:8080/api';
 
 const api = axios.create({
   baseURL: API_BASE,

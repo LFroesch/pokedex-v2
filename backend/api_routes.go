@@ -13,6 +13,11 @@ import (
 func setupRouter(cfg *config) *gin.Engine {
 	r := gin.Default()
 
+	// Serve built React app
+	r.Static("/assets", "./frontend/dist/assets")
+	r.StaticFile("/", "./frontend/dist/index.html")
+	r.NoRoute(func(c *gin.Context) { c.File("./frontend/dist/index.html") })
+
 	// CORS for frontend - more permissive for development
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
