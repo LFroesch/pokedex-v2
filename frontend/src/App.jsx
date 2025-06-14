@@ -4,6 +4,7 @@ import { MapView } from './components/MapView';
 import { LocationView } from './components/LocationView';
 import { PokedexView } from './components/PokedexView';
 import { PokemonDetail } from './components/PokemonDetail';
+import Footer from './components/Footer';
 
 function Navigation() {
   const location = useLocation();
@@ -46,6 +47,7 @@ function Navigation() {
 
 function App() {
   return (
+    <>
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Navigation />
@@ -60,6 +62,8 @@ function App() {
         </main>
       </div>
     </Router>
+    <Footer/>
+    </>
   );
 }
 
