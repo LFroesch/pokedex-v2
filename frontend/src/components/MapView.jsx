@@ -68,7 +68,7 @@ export function MapView() {
   return (
     <div>
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">Pokemon World</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">Pokedex World</h1>
         <p className="text-lg text-gray-600">Choose a location to explore and find Pokemon!</p>
       </div>
         {/* Pagination */}

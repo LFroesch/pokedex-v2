@@ -20,7 +20,7 @@ function Navigation() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-2">
             <div className="text-2xl">⚾</div>
-            <h1 className="text-xl font-bold text-gray-800">Pokedex Web</h1>
+            <h1 className="text-xl font-bold text-gray-800">Pokedex World</h1>
           </div>
           
           <div className="flex space-x-1">
