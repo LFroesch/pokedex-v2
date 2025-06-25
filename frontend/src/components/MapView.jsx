@@ -38,6 +38,25 @@ export function MapView() {
       .join(' ');
   };
 
+  const getPaginationInfo = () => {
+    const itemsPerPage = 20; // Pokemon API default
+    const totalPages = Math.ceil(pagination.count / itemsPerPage);
+    
+    // Extract current page from next/previous URLs or assume page 1
+    let currentPage = 1;
+    if (pagination.next) {
+      const nextUrl = new URL(pagination.next);
+      const offset = parseInt(nextUrl.searchParams.get('offset') || '0');
+      currentPage = Math.floor(offset / itemsPerPage);
+    } else if (pagination.previous) {
+      const prevUrl = new URL(pagination.previous);
+      const offset = parseInt(prevUrl.searchParams.get('offset') || '0');
+      currentPage = Math.floor(offset / itemsPerPage) + 2;
+    }
+    
+    return { currentPage, totalPages, itemsPerPage };
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-96">
@@ -65,6 +84,8 @@ export function MapView() {
     );
   }
 
+  const { currentPage, totalPages } = getPaginationInfo();
+
   return (
     <div>
       <div className="text-center mb-8">
@@ -86,7 +107,7 @@ export function MapView() {
         </button>
         
         <span className="text-gray-600">
-          Total: {pagination.count} locations
+          Page {currentPage} of {totalPages} • {pagination.count} locations
         </span>
         
         <button
@@ -135,7 +156,7 @@ export function MapView() {
         </button>
         
         <span className="text-gray-600">
-          Total: {pagination.count} locations
+          Page {currentPage} of {totalPages} • {pagination.count} locations
         </span>
         
         <button

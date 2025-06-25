@@ -38,7 +38,7 @@ func setupRouter(cfg *config) *gin.Engine {
 			if pageURL != "" {
 				targetURL = &pageURL
 			} else {
-				targetURL = cfg.nextLocationAreaURL
+				targetURL = nil
 			}
 
 			resp, err := cfg.pokeapiClient.ListLocationAreas(targetURL)
@@ -48,8 +48,8 @@ func setupRouter(cfg *config) *gin.Engine {
 			}
 
 			// Update pagination URLs
-			cfg.nextLocationAreaURL = resp.Next
-			cfg.prevLocationAreaURL = resp.Previous
+			// cfg.nextLocationAreaURL = resp.Next
+			// cfg.prevLocationAreaURL = resp.Previous
 
 			c.JSON(http.StatusOK, gin.H{
 				"locations": resp.Results,

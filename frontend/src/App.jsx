@@ -34,7 +34,7 @@ function Navigation() {
                 key={item.path}
                 to={item.path}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 ${
-                  location.pathname === item.path
+                  location.pathname === item.path || (item.path === '/' && location.pathname.startsWith('/location/'))
                     ? 'bg-pokemon-red text-white shadow-md'
                     : 'text-gray-600 hover:text-pokemon-red hover:bg-red-50'
                 }`}
