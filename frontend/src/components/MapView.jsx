@@ -31,6 +31,28 @@ export function MapView() {
     }
   };
 
+  const handleNext = () => {
+    if (pagination.next) {
+      loadLocations(pagination.next);
+    } else {
+      // If no next page, loop back to first page
+      loadLocations(null); // null loads the first page
+    }
+  };
+
+  const handlePrevious = () => {
+    if (pagination.previous) {
+      loadLocations(pagination.previous);
+    } else {
+      // If no previous page, go to last page
+      // Calculate the last page URL based on total count
+      const totalPages = Math.ceil(pagination.count / 20); // 20 items per page
+      const lastPageOffset = (totalPages - 1) * 20;
+      const lastPageUrl = `https://pokeapi.co/api/v2/location-area?offset=${lastPageOffset}&limit=20`;
+      loadLocations(lastPageUrl);
+    }
+  };
+
   const formatLocationName = (name) => {
     return name
       .split('-')
@@ -38,24 +60,31 @@ export function MapView() {
       .join(' ');
   };
 
-  const getPaginationInfo = () => {
-    const itemsPerPage = 20; // Pokemon API default
-    const totalPages = Math.ceil(pagination.count / itemsPerPage);
-    
-    // Extract current page from next/previous URLs or assume page 1
-    let currentPage = 1;
-    if (pagination.next) {
-      const nextUrl = new URL(pagination.next);
-      const offset = parseInt(nextUrl.searchParams.get('offset') || '0');
-      currentPage = Math.floor(offset / itemsPerPage);
-    } else if (pagination.previous) {
-      const prevUrl = new URL(pagination.previous);
-      const offset = parseInt(prevUrl.searchParams.get('offset') || '0');
-      currentPage = Math.floor(offset / itemsPerPage) + 2;
+  // Calculate current page info for display
+  const getCurrentPageInfo = () => {
+    if (!pagination.next && !pagination.previous) {
+      return { currentPage: 1, totalPages: Math.ceil(pagination.count / 20) };
     }
     
-    return { currentPage, totalPages, itemsPerPage };
+    // Extract offset from next or previous URL to determine current page
+    let currentOffset = 0;
+    if (pagination.next) {
+      const nextUrl = new URL(pagination.next);
+      const nextOffset = parseInt(nextUrl.searchParams.get('offset') || '20');
+      currentOffset = nextOffset - 20;
+    } else if (pagination.previous) {
+      const prevUrl = new URL(pagination.previous);
+      const prevOffset = parseInt(prevUrl.searchParams.get('offset') || '0');
+      currentOffset = prevOffset + 20;
+    }
+    
+    const currentPage = Math.floor(currentOffset / 20) + 1;
+    const totalPages = Math.ceil(pagination.count / 20);
+    
+    return { currentPage, totalPages };
   };
+
+  const pageInfo = getCurrentPageInfo();
 
   if (loading) {
     return (
@@ -75,7 +104,7 @@ export function MapView() {
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Connection Error</h2>
         <p className="text-gray-600 mb-4">{error}</p>
         <button 
-          onClick={loadLocations}
+          onClick={() => loadLocations()}
           className="btn-primary"
         >
           Try Again
@@ -84,21 +113,20 @@ export function MapView() {
     );
   }
 
-  const { currentPage, totalPages } = getPaginationInfo();
-
   return (
     <div>
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">Pokedex World</h1>
         <p className="text-lg text-gray-600">Choose a location to explore and find Pokemon!</p>
       </div>
-        {/* Pagination */}
+      
+      {/* Pagination */}
       <div className="flex justify-center items-center space-x-4 mt-8">
         <button
-          onClick={() => loadLocations(pagination.previous)}
-          disabled={!pagination.previous || loading}
+          onClick={handlePrevious}
+          disabled={loading}
           className={`px-4 py-2 rounded-lg font-medium ${
-            pagination.previous && !loading
+            !loading
               ? 'btn-primary'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
@@ -106,15 +134,15 @@ export function MapView() {
           ← Previous
         </button>
         
-        <span className="text-gray-600">
-          Page {currentPage} of {totalPages} • {pagination.count} locations
-        </span>
+        <div className="text-center">
+          <div className="text-sm text-gray-600">{pageInfo.currentPage} of {pageInfo.totalPages} ({pagination.count} Total) </div>
+        </div>
         
         <button
-          onClick={() => loadLocations(pagination.next)}
-          disabled={!pagination.next || loading}
+          onClick={handleNext}
+          disabled={loading}
           className={`px-4 py-2 rounded-lg font-medium ${
-            pagination.next && !loading
+            !loading
               ? 'btn-primary'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
@@ -123,6 +151,7 @@ export function MapView() {
         </button>
       </div>
       <br/>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {locations.map((location) => (
           <Link
@@ -144,10 +173,10 @@ export function MapView() {
       {/* Pagination */}
       <div className="flex justify-center items-center space-x-4 mt-8">
         <button
-          onClick={() => loadLocations(pagination.previous)}
-          disabled={!pagination.previous || loading}
+          onClick={handlePrevious}
+          disabled={loading}
           className={`px-4 py-2 rounded-lg font-medium ${
-            pagination.previous && !loading
+            !loading
               ? 'btn-primary'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
@@ -155,15 +184,15 @@ export function MapView() {
           ← Previous
         </button>
         
-        <span className="text-gray-600">
-          Page {currentPage} of {totalPages} • {pagination.count} locations
-        </span>
+        <div className="text-center">
+          <div className="text-sm text-gray-600">{pageInfo.currentPage} of {pageInfo.totalPages} ({pagination.count} Total) </div>
+        </div>
         
         <button
-          onClick={() => loadLocations(pagination.next)}
-          disabled={!pagination.next || loading}
+          onClick={handleNext}
+          disabled={loading}
           className={`px-4 py-2 rounded-lg font-medium ${
-            pagination.next && !loading
+            !loading
               ? 'btn-primary'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
