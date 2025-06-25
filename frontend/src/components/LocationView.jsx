@@ -164,7 +164,11 @@ export function LocationView() {
             
             <button
               onClick={dismissCatchResult}
-              className="btn-primary"
+              className={`text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg ${
+              catchResult.caught 
+                ? 'bg-green-500 hover:bg-green-600' 
+                : 'bg-red-500 hover:bg-red-600'
+            }`}
             >
               Continue
             </button>

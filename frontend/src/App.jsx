@@ -6,6 +6,7 @@ import { PokedexView } from './components/PokedexView';
 import { PokemonDetail } from './components/PokemonDetail';
 import Footer from './components/Footer';
 
+
 function Navigation() {
   const location = useLocation();
   
@@ -18,10 +19,14 @@ function Navigation() {
     <nav className="bg-white shadow-lg border-b-4 border-pokemon-red">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-2">
-            <div className="text-2xl">⚾</div>
+          <Link to="/" className="flex items-center space-x-2">
+            <img
+              src="/pokeball.png"
+              alt="Pokeball"
+              className="w-8 h-8"
+            />
             <h1 className="text-xl font-bold text-gray-800">Pokedex World</h1>
-          </div>
+          </Link>
           
           <div className="flex space-x-1">
             {navItems.map((item) => (

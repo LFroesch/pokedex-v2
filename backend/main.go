@@ -11,6 +11,7 @@ import (
 
 func main() {
 	// Add flag to choose between CLI and web mode
+	// startCronJob()
 	webMode := flag.Bool("web", false, "Run in web server mode")
 	port := flag.String("port", "8080", "Port for web server")
 	flag.Parse()

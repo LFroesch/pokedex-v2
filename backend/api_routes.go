@@ -8,6 +8,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/rand"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func setupRouter(cfg *config) *gin.Engine {
@@ -123,10 +125,12 @@ func setupRouter(cfg *config) *gin.Engine {
 				"roll":            res,
 				"base_experience": pokemon.BaseExperience,
 				"message": func() string {
+					caser := cases.Title(language.English)
+					capitalizedName := caser.String(pokemon.Name)
 					if success {
-						return pokemon.Name + " was caught!"
+						return capitalizedName + " was caught!"
 					}
-					return pokemon.Name + " escaped!"
+					return capitalizedName + " escaped!"
 				}(),
 			})
 		})
